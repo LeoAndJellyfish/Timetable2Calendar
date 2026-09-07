@@ -72,7 +72,7 @@ npm test
 npm run build
 ```
 
-51 项常规测试覆盖 HTML / JSON 提取、PDF 版面解析、分段与单双周、异常输入、停调课、冲突、时区和 ICS 规范；使用独立的 `ical.js` 回读日历。
+52 项常规测试覆盖 HTML / JSON 提取、PDF 版面解析、分段与单双周、异常输入、停调课、冲突、时区和 ICS 规范；使用独立的 `ical.js` 回读日历。构建回归测试检查 PDF worker 的输出扩展名、内容与引用。
 
 另有 2 项可选本地集成测试：设置 `PDF_SAMPLE_FILES`（两份匹配样本路径组成的 JSON 数组），以及可选的 `CALENDAR_REFERENCE_FILE`（参考 ICS 路径）。这些测试面向开发时使用的固定样本，校验两种 PDF 布局结果一致及 188 个日程字段匹配；未提供文件时自动跳过。个人样本不会提交到仓库。
 
@@ -81,6 +81,14 @@ npm run build
 运行 `npm run build`，将完整的 **`dist/`** 部署到支持 HTTPS 的静态网站主机根路径。无需后端。
 
 当前静态资源使用根路径；部署到子目录时，需要同时调整 Vite base、字体地址和 PDF 资源地址。请完整保留构建产物中的 PDF worker、CMap、标准字体和许可证文件。
+
+### EdgeOne 部署
+
+构建命令使用 `npm run build`，输出目录填写 `dist`。PDF worker 会输出为带哈希的 `.js` 文件，以兼容将 `.mjs` 默认识别为 `application/octet-stream` 的静态托管环境；模块内容与 PDF.js 原文件一致。
+
+若出现 `Setting up fake worker failed`，请在浏览器 Network 中检查 worker 请求：应返回 200，且 `Content-Type` 为 `text/javascript` 或 `application/javascript`。401/403 表示访问验证问题；404 或返回 HTML 则需检查部署目录和重写规则。临时预览域名可能要求完整的访问验证链接，绑定自定义域名不能替代正确的资源类型配置。
+
+更新版本后请重新部署完整构建，并刷新已打开的页面，以加载新的 worker 地址。
 
 ## 项目结构
 
