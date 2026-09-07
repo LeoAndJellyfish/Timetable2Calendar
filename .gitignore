@@ -1,0 +1,33 @@
+# Dependencies and generated assets
+node_modules/
+dist/
+public/pdfjs-assets/
+coverage/
+.vite/
+*.tsbuildinfo
+
+# Local work, personal timetable files and exports
+.local/
+output/
+docs/plans/
+*.ics
+*.pdf
+timetable-backup*.json
+cufe-timetable*.json
+
+# Environment files and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and editor/OS files
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
