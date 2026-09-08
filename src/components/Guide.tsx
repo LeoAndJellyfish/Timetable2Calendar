@@ -3,7 +3,7 @@ import { Dialog } from './Dialog';
 
 export function Guide({ onClose }: { onClose: () => void }) {
   return <Dialog title="导入课表" onClose={onClose} wide>
-    <p><a className="text-button" href="https://xuanke.cufe.edu.cn/jwglxt/kbcx/xskbcx_cxXskbcxIndex.html?gnmkdm=N2151&layout=default" target="_blank" rel="noreferrer">打开教务课表<ExternalLink size={14} /></a></p>
+    <p className="guide-school-link"><a className="text-button" href="https://xuanke.cufe.edu.cn/jwglxt/kbcx/xskbcx_cxXskbcxIndex.html?gnmkdm=N2151&layout=default" target="_blank" rel="noreferrer">打开教务课表<ExternalLink size={14} /></a></p>
     <p className="muted">支持 PDF、保存的 HTML 网页和课历 JSON 备份。</p>
     <div className="guide-steps">
       <div><span className="step-dot"><FileText size={17} /></span><section><h3>PDF 课表</h3><p>在教务系统查询课表后，打印或导出为 PDF，再回到课历选择或拖入文件。支持文字版表格、列表和跨页课表；扫描件与截图暂不支持。</p></section></div>

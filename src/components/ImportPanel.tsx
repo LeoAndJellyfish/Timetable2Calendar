@@ -1,5 +1,5 @@
 import { useRef, useState, type DragEvent } from 'react';
-import { ArrowUpRight, FileCode2, Upload, ShieldCheck, Braces, ArrowRight, FileCheck2 } from 'lucide-react';
+import { ArrowUpRight, FileCode2, Upload, Braces, ArrowRight, FileCheck2 } from 'lucide-react';
 import { MAX_INPUT_BYTES, parseInput } from '../lib/parser';
 import type { ImportResult } from '../lib/types';
 import { Dialog } from './Dialog';
@@ -48,8 +48,7 @@ export function ImportPanel({ onImport, onGuide, compact = false, filename }: { 
 
   return <aside className={`import-panel panel ${compact ? 'import-panel-simple' : ''}`} id="import-panel" aria-label="课表导入">
     {!compact && <><div className="panel-eyebrow">01 / IMPORT</div>
-    <h2>导入你的课表</h2>
-    <p className="muted import-desc">一份课表文件，就能开始。</p></>}
+    <h2>导入你的课表</h2></>}
     <input ref={fileInput} type="file" accept=".pdf,.html,.htm,.json" className="visually-hidden" tabIndex={-1} aria-label="选择课表文件" onChange={event => void readFile(event.target.files?.[0])} />
     <button id="import-trigger" className={`dropzone ${dragging ? 'dragging' : ''}`} aria-label="选择或拖入课表文件" aria-busy={busy} onDragOver={event => { event.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={drop} onClick={() => fileInput.current?.click()} disabled={busy}>
       <span className="upload-icon"><Upload size={23} strokeWidth={1.6} /></span>
@@ -62,12 +61,11 @@ export function ImportPanel({ onImport, onGuide, compact = false, filename }: { 
     <button className="button secondary full" disabled={busy} onClick={() => { setError(''); setPasting(true); }}><Braces size={17} />粘贴课表内容<ArrowRight size={15} /></button></>}
     {error && !pasting && <p role="alert" className="error-message">{error}</p>}
     {filename && <div className="file-status"><FileCheck2 size={17} /><span title={filename}>{filename}</span></div>}
-    {!compact && <><div className="how-to">
+    {!compact && <div className="how-to">
       <h3><FileCode2 size={17} strokeWidth={1.5} />还没有课表文件？</h3>
       <p>从教务系统导出 PDF，或按 Ctrl + S 保存课表网页。</p>
       <button className="text-button" onClick={onGuide}>查看导入指南<ArrowUpRight size={15} /></button>
-    </div>
-    <div className="privacy-note"><ShieldCheck size={17} /><span>数据留在你的设备<small>无需登录，不上传课表。</small></span></div></>}
+    </div>}
     {pasting && <Dialog title="粘贴课表内容" onClose={() => setPasting(false)}>
       <p className="muted">粘贴已保存的课表 HTML，或课历 JSON 备份的完整内容。导入后会替换当前课表。</p>
       <textarea className="code-input" aria-label="课表 HTML 或 JSON" placeholder={'<table id="kbgrid_table_0">…\n\n或 { "format": "timetable2calendar", … }'} value={input} onChange={event => setInput(event.target.value)} autoFocus spellCheck={false} />

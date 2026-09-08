@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDownToLine, ArrowRight, BookOpen, CalendarCheck2, Check, CheckCheck, ChevronRight, CircleHelp, Download, FileJson, LockKeyhole, Trash2, ShieldCheck, TriangleAlert } from 'lucide-react';
+import { ArrowDownToLine, ArrowRight, CalendarCheck2, Check, CheckCheck, ChevronRight, CircleHelp, Download, FileJson, Trash2, ShieldCheck, TriangleAlert } from 'lucide-react';
 import { ImportPanel } from './components/ImportPanel';
 import { Timetable } from './components/Timetable';
 import { SettingsPanel } from './components/SettingsPanel';
@@ -15,7 +15,6 @@ type Section = 'timetable' | 'settings' | 'exceptions';
 const SECTION_NAMES = { timetable: '我的课表', settings: '学期与时间', exceptions: '停课与调课' };
 const emptyResult = (): ImportResult => ({ courses: [], term: '', warnings: [], sourceCount: 0 });
 const PAGE_COPY = {
-  timetable: { eyebrow: 'TIMETABLE TO CALENDAR', title: '把课表，放进你的日历。', description: '从教务系统到日常安排，让每一周井然有序。' },
   settings: { eyebrow: 'SEMESTER & TIME', title: '学期与时间', description: '从第一周开始，让每一节课都准时出现在日历里。' },
   exceptions: { eyebrow: 'SCHEDULE ADJUSTMENTS', title: '停课与调课', description: '为假期和临时变动，留一点调整的空间。' },
 };
@@ -73,17 +72,20 @@ export default function App() {
   return <div className="app-shell">
     <a className="skip-link" href="#main-content">跳到主要内容</a>
     <header className={`product-nav ${hasCourses ? '' : 'product-nav-empty'}`}>
-      <a className="brand" href="#" onClick={event => { event.preventDefault(); setSection('timetable'); }} aria-label="课历首页"><span className="brand-mark" aria-hidden="true">CL</span><span>课历</span></a>
+      <a className="brand" href="#" onClick={event => { event.preventDefault(); setSection('timetable'); }} aria-label="课历首页"><span className="brand-mark" aria-hidden="true"><CalendarCheck2 size={22} strokeWidth={1.8} /></span><span>课历</span></a>
       {hasCourses && <nav aria-label="主导航">
         {(['timetable', 'settings', 'exceptions'] as const).map(key => <button key={key} className={`nav-item ${section === key ? 'active' : ''}`} onClick={() => setSection(key)} aria-current={section === key ? 'page' : undefined}>{SECTION_NAMES[key]}</button>)}
       </nav>}
-      <div className="product-nav-actions"><span className="local-badge"><LockKeyhole size={13} />本地解析</span><button className="button secondary guide-button" onClick={() => setGuide(true)}><CircleHelp size={15} /><span>使用指南</span></button></div>
+      <div className="product-nav-actions"><button className="button secondary guide-button" onClick={() => setGuide(true)}><CircleHelp size={15} /><span>使用指南</span></button></div>
     </header>
 
     <main id="main-content" className={`main-content page-${section} ${hasCourses ? '' : 'page-empty'}`} tabIndex={-1}>
-      <section className="hero"><div className="hero-copy"><div className="eyebrow">{PAGE_COPY[section].eyebrow}</div><h1>{PAGE_COPY[section].title}</h1><p>{hasCourses ? PAGE_COPY[section].description : '导入教务课表，生成你的日历。'}</p></div>{hasCourses && <button className="button primary export-main" onClick={requestExport}><ArrowDownToLine size={17} />导出日历<span>.ics</span></button>}</section>
+      {section === 'timetable' && <h1 className="visually-hidden">{hasCourses ? '我的课表' : '导入课表'}</h1>}
+      {(section !== 'timetable' || hasCourses) && <section className={`hero ${section === 'timetable' ? 'hero-actions' : ''}`}>
+        {section !== 'timetable' && <div className="hero-copy"><div className="eyebrow">{PAGE_COPY[section].eyebrow}</div><h1>{PAGE_COPY[section].title}</h1><p>{PAGE_COPY[section].description}</p></div>}
+        {hasCourses && <button className="button primary export-main" onClick={requestExport}><ArrowDownToLine size={17} />导出日历<span>.ics</span></button>}
+      </section>}
       {section === 'timetable' && hasCourses && <>
-      <div className="school-line"><span className="school-badge"><BookOpen size={14} />中央财经大学</span><span>正方教务系统</span><span className="dot-separator">/</span><span>Apple 日历 · Google 日历 · Outlook</span></div>
       <section className="stats-strip" aria-label="课表统计">
         <div><section><span>已选课程</span><strong>{distinct}<small>门</small></strong></section></div>
         <div><section><span>教学周跨度</span><strong>{courseMaxWeek}<small>周</small></strong></section></div>
@@ -97,7 +99,7 @@ export default function App() {
 
       {section === 'timetable' ? <div className="workspace-grid"><ImportPanel onImport={importResult} onGuide={() => setGuide(true)} compact={!hasCourses} filename={filename} />{hasCourses && <Timetable courses={result.courses} selected={selected} toggle={toggle} events={events} settings={settings} week={Math.min(week, maxWeek)} setWeek={setWeek} onEdit={setEditing} onSettings={() => setSection('settings')} maxWeek={maxWeek} term={result.term} />}</div> : <SettingsPanel settings={settings} setSettings={setSettings} section={section} courses={selectedCourses} onDone={() => setSection('timetable')} />}
 
-      {hasCourses ? <><footer className="page-footer"><span><ShieldCheck size={15} />无需登录 · 本地解析 · 自由导出</span><div><button onClick={() => { downloadText(JSON.stringify(coursePayload(result.courses, result.term), null, 2), 'timetable-backup.json', 'application/json;charset=utf-8'); setToast('已下载课程 JSON，包含所有排课段；学期设置不包含在此备份中。'); }}><FileJson size={14} />保存课程数据</button><button onClick={() => { setResult(emptyResult()); setSelected(new Set()); setFilename(''); setSettings(initialSettings()); setWeek(1); setSection('timetable'); setToast('已清空当前课表。'); }}><Trash2 size={13} />清空课表</button></div></footer>
+      {hasCourses ? <><footer className="page-footer"><div><button onClick={() => { downloadText(JSON.stringify(coursePayload(result.courses, result.term), null, 2), 'timetable-backup.json', 'application/json;charset=utf-8'); setToast('已下载课程 JSON，包含所有排课段；学期设置不包含在此备份中。'); }}><FileJson size={14} />保存课程数据</button><button onClick={() => { setResult(emptyResult()); setSelected(new Set()); setFilename(''); setSettings(initialSettings()); setWeek(1); setSection('timetable'); setToast('已清空当前课表。'); }}><Trash2 size={13} />清空课表</button></div></footer>
       <p className="session-note">课程仅保留在当前页面中。离开前可保存课程数据，下次重新导入。</p></> : <p className="empty-privacy"><ShieldCheck size={14} />本地解析，无需登录，课表不会上传。</p>}
     </main>
     {guide && <Guide onClose={() => setGuide(false)} />}

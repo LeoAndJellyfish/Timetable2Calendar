@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#f0efed"/><g fill="none" stroke="#292524" stroke-width="3" stroke-linecap="round"><rect x="17" y="19" width="30" height="29" rx="4"/><path d="M17 29h30M24 14v10m16-10v10m-16 13 6 6 10-11"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">课历</title>
+  <desc id="desc">暖白陶瓷质感的日历勾选图标。</desc>
+  <defs>
+    <linearGradient id="ceramic" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffef9"/><stop offset="1" stop-color="#e2e4dc"/></linearGradient>
+  </defs>
+  <rect x="4" y="6" width="56" height="56" rx="17" fill="#cdd2c8"/>
+  <rect x="3" y="2" width="56" height="56" rx="17" fill="url(#ceramic)" stroke="#ffffff" stroke-width="1.5"/>
+  <g fill="none" stroke="#536f61" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="16" y="18" width="30" height="29" rx="5"/>
+    <path d="M16 28h30M23 13v10m16-10v10m-15 13 5 5 9-10"/>
+  </g>
+</svg>
