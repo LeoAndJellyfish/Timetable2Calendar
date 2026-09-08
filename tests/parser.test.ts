@@ -1,15 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { runInNewContext } from 'node:vm';
 import { DOMParser } from 'linkedom';
 import { collectSchedule } from '../src/lib/extract.js';
 import { parseInput, parsePeriods, parseWeeks, MAX_INPUT_BYTES } from '../src/lib/parser';
 import { coursePayload } from '../src/lib/settings';
 import { demoResult, DEMO_PAYLOAD } from './fixtures/schedule';
-import { extractionScript } from '../src/lib/extractor';
 
 const fixture = readFileSync(new URL('./fixtures/cufe.html', import.meta.url), 'utf8');
-describe('CUFE observed HTML and extraction', () => {
+describe('CUFE saved HTML and JSON backups', () => {
   it('inherits omitted course title but preserves teacher/week splits', () => {
     const parsed = parseInput(fixture);
     expect(parsed.courses).toHaveLength(5);
@@ -26,20 +24,11 @@ describe('CUFE observed HTML and extraction', () => {
     expect(serialized).not.toContain('Hidden alternate');
     expect(parseInput(serialized).courses).toEqual(parseInput(fixture).courses);
   });
-  it('the exact generated extraction script downloads parseable JSON', () => {
-    const doc = new DOMParser().parseFromString(fixture, 'text/html');
-    let json = '';
-    let clicks = 0;
-    const create = doc.createElement.bind(doc) as (name: string) => HTMLElement;
-    doc.createElement = ((name: string) => { const el = create(name); if (name === 'a') el.click = () => { clicks++; }; return el; }) as typeof doc.createElement;
-    runInNewContext(extractionScript(), {
-      document: doc, URL: { createObjectURL: (blob: { content: string }) => { json = blob.content; return 'blob:test'; }, revokeObjectURL: () => {} },
-      Blob: class { content: string; constructor(parts: string[]) { this.content = parts.join(''); } }, setTimeout: () => 1,
-      alert: (message: string) => { throw new Error(message); },
-    });
-    expect(clicks).toBe(1);
-    expect(parseInput(json).courses).toHaveLength(5);
-    expect(doc.querySelector('a')).toBeNull();
+  it('reads a saved webpage without its companion resource folder', () => {
+    const saved = fixture.replace('<html>', '<!-- saved from url=(0024)https://example.invalid/ --><html>')
+      .replace('</head>', '<link rel="stylesheet" href="课表_files/styles.css"><script src="课表_files/app.js"></script></head>')
+      .replace('</body>', '<img src="课表_files/logo.png"></body>');
+    expect(parseInput(saved)).toEqual(parseInput(fixture));
   });
   it('does not execute scripts in imported HTML', () => {
     const parsed = parseInput(fixture.replace('</body>', '<script>throw new Error("executed")</script><img src="https://example.invalid/tracker" onerror="throw 1"></body>'));

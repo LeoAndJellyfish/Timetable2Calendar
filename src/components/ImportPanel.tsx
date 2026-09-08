@@ -23,7 +23,7 @@ export function ImportPanel({ onImport, onGuide, compact = false, filename }: { 
     if (!file || reading.current) return;
     setError('');
     if (!/\.(pdf|html?|json)$/i.test(file.name)) { setError('请选择 PDF、HTML 或 JSON 文件。截图暂不支持。'); return; }
-    if (file.size > MAX_INPUT_BYTES) { setError('文件超过 5 MB，请用提取脚本保存较小的课表 JSON。'); return; }
+    if (file.size > MAX_INPUT_BYTES) { setError('文件超过 5 MB，请只保存个人课表，或改用教务系统导出的 PDF。'); return; }
     reading.current = true;
     setBusy(true); setProgress('正在读取课表…');
     try {
@@ -64,12 +64,12 @@ export function ImportPanel({ onImport, onGuide, compact = false, filename }: { 
     {filename && <div className="file-status"><FileCheck2 size={17} /><span title={filename}>{filename}</span></div>}
     {!compact && <><div className="how-to">
       <h3><FileCode2 size={17} strokeWidth={1.5} />还没有课表文件？</h3>
-      <p>从教务系统导出 PDF，或用一键提取脚本保存课表。</p>
+      <p>从教务系统导出 PDF，或按 Ctrl + S 保存课表网页。</p>
       <button className="text-button" onClick={onGuide}>查看导入指南<ArrowUpRight size={15} /></button>
     </div>
     <div className="privacy-note"><ShieldCheck size={17} /><span>数据留在你的设备<small>无需登录，不上传课表。</small></span></div></>}
     {pasting && <Dialog title="粘贴课表内容" onClose={() => setPasting(false)}>
-      <p className="muted">粘贴已保存的课表 HTML，或提取脚本生成的完整 JSON。导入后会替换当前课表。</p>
+      <p className="muted">粘贴已保存的课表 HTML，或课历 JSON 备份的完整内容。导入后会替换当前课表。</p>
       <textarea className="code-input" aria-label="课表 HTML 或 JSON" placeholder={'<table id="kbgrid_table_0">…\n\n或 { "format": "timetable2calendar", … }'} value={input} onChange={event => setInput(event.target.value)} autoFocus spellCheck={false} />
       {error && <p className="error-message" role="alert">{error}</p>}
       <div className="dialog-actions"><button className="button secondary" onClick={() => setPasting(false)}>取消</button><button className="button primary" onClick={() => readText(input, '粘贴的课表')}>解析课表<ArrowRight size={16} /></button></div>

@@ -1,12 +1,11 @@
 /**
- * Runs both against a parsed HTML document and as a self-contained bookmarklet.
- * Keep all helpers inside this function: Function#toString builds the extractor.
+ * Collects course fields from an isolated, parsed HTML document.
  * Reads only course fields. Does not collect student identity, cookies or tokens.
  */
 export function collectSchedule(doc) {
   const clean = (value) => String(value || '').replace(/[\uE000-\uF8FF]/g, '').replace(/\s+/g, ' ').trim();
   const table = doc.querySelector('#kbgrid_table_0') || doc.querySelector('table[id^="kbgrid_table_"]');
-  if (!table) throw new Error('未找到课表。请先登录教务系统，查询课表并切换到「表格」视图。');
+  if (!table) throw new Error('未找到课表。请在教务系统查询课表并切换到「表格」视图，等课程显示完整后按 Ctrl + S 保存为 HTML；也可改用 PDF。');
   const records = [];
   for (const cell of table.querySelectorAll('td[id]')) {
     const position = cell.id.match(/^([1-7])-(\d+)$/);
@@ -34,7 +33,7 @@ export function collectSchedule(doc) {
       });
     }
   }
-  if (!records.length) throw new Error('表格中没有课程。请确认学年、学期，并点击「查询」后重新提取。');
+  if (!records.length) throw new Error('表格中没有课程。请确认学年、学期，点击「查询」并等课程显示完整后重新保存网页；也可改用 PDF。');
   return {
     format: 'timetable2calendar',
     version: 1,

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">课历</title>
+  <desc id="desc">暖灰色圆形中的日历与勾选标记，沿用课历站点图标。</desc>
+  <circle cx="32" cy="32" r="32" fill="#f0efed"/>
+  <g fill="none" stroke="#292524" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="17" y="19" width="30" height="29" rx="4"/>
+    <path d="M17 29h30M24 14v10m16-10v10m-16 13 6 6 10-11"/>
+  </g>
+</svg>

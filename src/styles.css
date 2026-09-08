@@ -258,7 +258,6 @@ textarea { resize: vertical; line-height: 1.7; }
 .edit-form>label { margin-bottom: 20px; }
 .edit-form .form-grid { margin-bottom: 20px; gap: 18px; }
 .code-input { display: block; width: 100%; min-height: 235px; margin: 20px 0 0; padding: 15px; font: 500 14px/1.75 'Cascadia Code', 'Consolas', monospace; background: var(--canvas-soft); color: var(--body); white-space: pre; }
-.guide-section-title { font-size: 16px; margin-top: 26px; }
 .guide-steps { margin: 22px 0; }
 .guide-steps>div { display: flex; align-items: flex-start; gap: 14px; padding: 17px 0; border-bottom: 1px solid var(--line); }
 .guide-steps>div:last-child { border-bottom: 0; }
@@ -266,13 +265,6 @@ textarea { resize: vertical; line-height: 1.7; }
 .guide-steps section { min-width: 0; }
 .guide-steps h3 { font-size: 16px; margin: 2px 0 8px; }
 .guide-steps p { font-size: 16px; color: var(--muted); margin: 0 0 10px; }
-.guide-steps small { font-size: 14px; margin-top: 10px; }
-.guide-code { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 22px; }
-.guide-code summary { color: var(--primary); font-size: 16px; cursor: pointer; }
-.guide-code p { margin-top: 13px; }
-.guide-code .code-input { min-height: 180px; }
-.guide-alternative { font-size: 16px; color: var(--muted); }
-.guide-alternative strong { color: var(--body); }
 .dialog-inner>.notice.neutral { margin-top: 18px; }
 .export-illustration { width: 70px; height: 70px; display: grid; place-items: center; margin: 24px auto 19px; border-radius: 50%; color: var(--primary); background: radial-gradient(at 22% 35%, #daeee5, transparent 75%), #f6ece3; }
 .export-title { font: 600 28px var(--serif); font-synthesis: weight; color: var(--ink); text-align: center; }
@@ -437,7 +429,6 @@ textarea { resize: vertical; line-height: 1.7; }
   .guide-steps>div { gap: 10px; }
   .guide-steps h3 { font-size: 16px; }
   .guide-steps p { font-size: 14px; }
-  .bookmark-button { font-size: 16px; }
   .page-footer { align-items: flex-start; flex-direction: column; font-size: 14px; padding-top: 21px; }
   .page-footer button { font-size: 14px; }
   .session-note { text-align: left; font-size: 14px; }

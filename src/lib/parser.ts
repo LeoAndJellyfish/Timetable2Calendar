@@ -72,20 +72,20 @@ function textField(record: Record<string, unknown>, field: string, max = 1000): 
 
 export function parseInput(input: string): ImportResult {
   const raw = input.replace(/^\uFEFF/, '').trim();
-  if (!raw) throw new Error('请先选择课表文件，或粘贴 HTML / 提取结果。');
-  if (new TextEncoder().encode(raw).length > MAX_INPUT_BYTES) throw new Error('文件超过 5 MB，请使用提取脚本只保存课表内容。');
+  if (!raw) throw new Error('请先选择课表文件，或粘贴 HTML / JSON 备份内容。');
+  if (new TextEncoder().encode(raw).length > MAX_INPUT_BYTES) throw new Error('文件超过 5 MB，请只保存个人课表，或改用教务系统导出的 PDF。');
   let payload: unknown;
   if (raw.startsWith('{') || raw.startsWith('[')) {
-    try { payload = JSON.parse(raw); } catch { throw new Error('JSON 内容不完整，请重新复制完整的提取结果。'); }
+    try { payload = JSON.parse(raw); } catch { throw new Error('JSON 内容不完整，请重新导入备份文件或复制完整内容。'); }
   } else if (raw.startsWith('<')) {
     // linkedom parses without a browser document: scripts and resource URLs never execute or load.
     const doc = new DOMParser().parseFromString(raw, 'text/html');
     payload = collectSchedule(doc);
   } else {
-    throw new Error('请粘贴保存的 HTML 网页或提取脚本生成的 JSON；PDF 请通过文件选择导入，网址和截图暂不支持。');
+    throw new Error('请粘贴保存的 HTML 网页或课历 JSON 备份；PDF 请通过文件选择导入，网址和截图暂不支持。');
   }
   if (!payload || typeof payload !== 'object' || !('format' in payload) || payload.format !== 'timetable2calendar' || !('version' in payload) || payload.version !== 1 || !('records' in payload) || !Array.isArray(payload.records)) {
-    throw new Error('这不是支持的课表 JSON。请使用本站的提取脚本，或导入教务课表 HTML。');
+    throw new Error('这不是支持的课表 JSON。请导入课历保存的 JSON 备份，或使用教务课表 PDF / HTML。');
   }
   if (!payload.records.length || payload.records.length > 1000) throw new Error('课表条数需要在 1–1000 之间。');
   const result: ImportResult = {
