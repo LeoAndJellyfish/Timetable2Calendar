@@ -433,7 +433,10 @@ textarea { resize: vertical; line-height: 1.7; }
 /* Before import, keep the page focused on one task. */
 .product-nav.product-nav-empty { display: flex; justify-content: space-between; height: 72px; }
 .page-empty { width: min(680px, calc(100% - 32px)); }
-.page-empty .workspace-grid { display: block; max-width: 550px; margin: 0 auto; padding-top: clamp(40px, 8vh, 80px); }
+.home-intro { max-width: 550px; margin: 0 auto; padding: clamp(32px, 5vh, 56px) 0 28px; text-align: center; }
+.home-intro h1 { font-size: clamp(30px, 3.8vw, 40px); line-height: 1.35; }
+.home-intro p { margin-top: 14px; color: var(--muted); font-size: 17px; line-height: 1.8; text-wrap: pretty; }
+.page-empty .workspace-grid { display: block; max-width: 550px; margin: 0 auto; }
 .import-panel.import-panel-simple { display: block; padding: 28px; border-radius: 30px; }
 .import-panel-simple .dropzone { margin: 0; min-height: 250px; padding: 26px 12px; border-radius: 21px; }
 .import-panel-simple .dropzone strong { font-size: 18px; }
@@ -443,6 +446,7 @@ textarea { resize: vertical; line-height: 1.7; }
 .empty-privacy { display: flex; align-items: flex-start; justify-content: center; gap: 7px; margin-top: 23px; color: var(--muted); font-size: 14px; text-align: center; line-height: 1.7; }
 @media (max-width: 600px) {
   .product-nav.product-nav-empty { height: 64px; padding-block: 0; }
+  .home-intro p { font-size: 16px; }
   .import-panel.import-panel-simple { padding: 18px; }
   .import-panel-simple .dropzone { min-height: 216px; }
   .simple-import-actions { gap: 10px; margin-top: 14px; }
@@ -450,7 +454,7 @@ textarea { resize: vertical; line-height: 1.7; }
   .empty-privacy { font-size: 14px; margin-top: 19px; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .hero-copy, .workspace-grid, .settings-panel { animation: arrive 360ms var(--ease) both; }
+  .home-intro, .hero-copy, .workspace-grid, .settings-panel { animation: arrive 360ms var(--ease) both; }
   .workspace-grid { animation-delay: 50ms; }
   .dialog[open] { animation: dialog-in 180ms var(--ease) both; }
   .toast { animation: toast-in 180ms var(--ease) both; }

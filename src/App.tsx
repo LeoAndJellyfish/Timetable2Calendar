@@ -80,7 +80,10 @@ export default function App() {
     </header>
 
     <main id="main-content" className={`main-content page-${section} ${hasCourses ? '' : 'page-empty'}`} tabIndex={-1}>
-      {section === 'timetable' && <h1 className="visually-hidden">{hasCourses ? '我的课表' : '导入课表'}</h1>}
+      {section === 'timetable' && (hasCourses ? <h1 className="visually-hidden">我的课表</h1> : <section className="home-intro" aria-labelledby="home-title">
+        <h1 id="home-title">把课表转换为日历</h1>
+        <p>导入教务课表，核对上课时间，导出 .ics 文件。可添加到 Apple 日历、Google 日历或 Outlook。</p>
+      </section>)}
       {(section !== 'timetable' || hasCourses) && <section className={`hero ${section === 'timetable' ? 'hero-actions' : ''}`}>
         {section !== 'timetable' && <div className="hero-copy"><div className="eyebrow">{PAGE_COPY[section].eyebrow}</div><h1>{PAGE_COPY[section].title}</h1><p>{PAGE_COPY[section].description}</p></div>}
         {hasCourses && <button className="button primary export-main" onClick={requestExport}><ArrowDownToLine size={17} />导出日历<span>.ics</span></button>}
