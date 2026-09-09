@@ -17,6 +17,7 @@ interface RecordDraft {
   teacher: string;
   location: string;
   className: string;
+  credits: string;
   notes: string;
 }
 
@@ -43,6 +44,7 @@ function record(name: string, day: number, time: string, content: string): Recor
     teacher: values.get('教师') || '',
     location: [values.get('校区'), values.get('场地') || values.get('地点') || values.get('教室')].filter(Boolean).join(' '),
     className: values.get('教学班') || '', notes: values.get('选课备注') || '',
+    credits: values.get('学分') || '',
   };
 }
 

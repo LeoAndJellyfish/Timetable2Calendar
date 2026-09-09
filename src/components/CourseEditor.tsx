@@ -2,19 +2,20 @@ import { useState } from 'react';
 import { Check } from 'lucide-react';
 import { Dialog } from './Dialog';
 import type { Course } from '../lib/types';
-import { compactNumbers, parsePeriods, parseWeeks } from '../lib/parser';
+import { compactNumbers, parseCredits, parsePeriods, parseWeeks } from '../lib/parser';
 import { WEEKDAYS } from '../lib/calendar';
 
 export function CourseEditor({ course, onSave, onClose }: { course: Course; onSave: (course: Course) => void; onClose: () => void }) {
   const [draft, setDraft] = useState(course);
   const [periods, setPeriods] = useState(compactNumbers(course.periods));
   const [weeks, setWeeks] = useState(course.weekText);
+  const [credits, setCredits] = useState(course.credits?.toString() ?? '');
   const [error, setError] = useState('');
   function save(event: React.FormEvent) {
     event.preventDefault();
     try {
       if (!draft.name.trim()) throw new Error('请填写课程名称。');
-      onSave({ ...draft, name: draft.name.trim(), periods: parsePeriods(periods), weeks: parseWeeks(weeks), weekText: weeks });
+      onSave({ ...draft, name: draft.name.trim(), periods: parsePeriods(periods), weeks: parseWeeks(weeks), weekText: weeks, credits: parseCredits(credits) });
       onClose();
     } catch (err) { setError((err as Error).message); }
   }
@@ -25,6 +26,7 @@ export function CourseEditor({ course, onSave, onClose }: { course: Course; onSa
       <div className="form-grid"><label>星期<select value={draft.day} onChange={event => setDraft({ ...draft, day: Number(event.target.value) })}>{WEEKDAYS.map((day, index) => <option key={day} value={index + 1}>{day}</option>)}</select></label><label>节次<input required value={periods} onChange={event => setPeriods(event.target.value)} placeholder="例如 1-2" /></label></div>
       <label>上课周次<input required value={weeks} onChange={event => setWeeks(event.target.value)} placeholder="例如 1-8周,10-16周(单)" /><small>支持单双周、不连续周次，例如 1-8周、10-16周(单)。</small></label>
       <div className="form-grid"><label>教师<input maxLength={1000} value={draft.teacher} onChange={event => setDraft({ ...draft, teacher: event.target.value })} /></label><label>教室 / 地点<input maxLength={1000} value={draft.location} onChange={event => setDraft({ ...draft, location: event.target.value })} /></label></div>
+      <label>学分<input type="number" min="0" step="any" inputMode="decimal" value={credits} onChange={event => setCredits(event.target.value)} placeholder="例如 2 或 0.25" /><small>源文件未提供时可留空；学分会写入详细日历备注和 JSON 备份。</small></label>
       <label>备注<textarea maxLength={1000} rows={2} value={draft.notes} onChange={event => setDraft({ ...draft, notes: event.target.value })} /></label>
       {draft.pending && <p className="notice warning">此课程在教务系统中为待筛选状态。</p>}
       {error && <p role="alert" className="error-message">{error}</p>}

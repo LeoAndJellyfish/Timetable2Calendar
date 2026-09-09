@@ -57,6 +57,46 @@ describe('CUFE saved HTML and JSON backups', () => {
     expect(restored.courses.map(({ weekText, ...course }) => course)).toEqual(parsed.courses.map(({ weekText, ...course }) => course));
     expect(demoResult().courses).toHaveLength(10);
   });
+  it('reads credits from their HTML label and preserves decimals, zero and missing values in JSON backups', () => {
+    const parsed = parseInput(fixture);
+    expect(parsed.courses.map(course => course.credits)).toEqual([2, 2, 0.25, undefined, 0]);
+    const json = JSON.stringify(coursePayload(parsed.courses, parsed.term));
+    const backup = JSON.parse(json);
+    expect(backup.version).toBe(1);
+    expect(backup.records.map((record: { credits?: number }) => record.credits)).toEqual([2, 2, 0.25, undefined, 0]);
+    expect(backup.records[3]).not.toHaveProperty('credits');
+    expect(parseInput(json).courses.map(course => course.credits)).toEqual([2, 2, 0.25, undefined, 0]);
+  });
+  it.each([0.25, '0.25', '学分：０．２５', '0.25 学分'])('normalizes fractional credits from JSON: %s', credits => {
+    const parsed = parseInput(JSON.stringify({ ...DEMO_PAYLOAD, records: [{ ...DEMO_PAYLOAD.records[0], credits }] }));
+    expect(parsed.courses[0].credits).toBe(0.25);
+    expect(parsed.warnings).toEqual([]);
+  });
+  it('still imports old backups and never turns missing credits into zero', () => {
+    const parsed = parseInput(JSON.stringify({ ...DEMO_PAYLOAD, records: [undefined, null, ''].map((credits, day) => ({ ...DEMO_PAYLOAD.records[0], day: day + 1, credits })) }));
+    expect(parsed.courses).toHaveLength(3);
+    expect(parsed.courses.every(course => course.credits === undefined)).toBe(true);
+    expect(parsed.warnings).toEqual([]);
+    expect(JSON.stringify(coursePayload(parsed.courses, parsed.term))).not.toContain('credits');
+  });
+  it.each([-1, '2 / 总学时：32', true, {}, 'Infinity'])('warns about invalid credits without losing a scheduled course: %s', credits => {
+    const parsed = parseInput(JSON.stringify({ ...DEMO_PAYLOAD, records: [{ ...DEMO_PAYLOAD.records[0], credits }] }));
+    expect(parsed.courses).toHaveLength(1);
+    expect(parsed.courses[0].credits).toBeUndefined();
+    expect(parsed.warnings).toEqual([expect.stringContaining('学分无法识别')]);
+  });
+  it('keeps later credit metadata when deduplicating the same scheduled course', () => {
+    const original = DEMO_PAYLOAD.records[0];
+    const withoutCredits = parseInput(JSON.stringify({ ...DEMO_PAYLOAD, records: [original] }));
+    const parsed = parseInput(JSON.stringify({ ...DEMO_PAYLOAD, records: [original, { ...original, credits: 0.25 }] }));
+    expect(parsed.courses).toHaveLength(1);
+    expect(parsed.courses[0].credits).toBe(0.25);
+    expect(parsed.courses[0].id).toBe(withoutCredits.courses[0].id);
+    const conflicting = parseInput(JSON.stringify({ ...DEMO_PAYLOAD, records: [{ ...original, credits: 0 }, { ...original, credits: 2 }] }));
+    expect(conflicting.courses).toHaveLength(1);
+    expect(conflicting.courses[0].credits).toBe(0);
+    expect(conflicting.warnings.some(warning => warning.includes('学分不一致'))).toBe(true);
+  });
 });
 
 describe('weeks and periods', () => {

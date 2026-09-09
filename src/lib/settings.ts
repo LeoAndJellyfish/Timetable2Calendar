@@ -18,5 +18,6 @@ export function coursePayload(courses: Course[], term: string) {
     records: courses.map(course => ({
       name: course.name, day: course.day, time: `(${course.periods.join(',')}节)${course.weeks.join(',')}周`,
       location: course.location, teacher: course.teacher, className: course.className, notes: course.notes, pending: course.pending,
+      ...(course.credits !== undefined ? { credits: course.credits } : {}),
     })) };
 }

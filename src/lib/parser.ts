@@ -70,6 +70,19 @@ function textField(record: Record<string, unknown>, field: string, max = 1000): 
   return record[field].replace(/[\u0000-\u001f\u007f]/g, ' ').trim();
 }
 
+export function parseCredits(value: unknown): number | undefined {
+  if (value == null) return undefined;
+  if (typeof value === 'string') {
+    const text = value.replace(/[０-９]/g, digit => String(digit.charCodeAt(0) - 0xff10)).replace(/．/g, '.')
+      .trim().replace(/^学分\s*[:：]?\s*/, '').replace(/\s*学分$/, '').trim();
+    if (!text) return undefined;
+    if (!/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(text)) throw new Error('学分须为非负数，可填写小数或留空');
+    value = Number(text);
+  }
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) throw new Error('学分须为非负数，可填写小数或留空');
+  return value;
+}
+
 export function parseInput(input: string): ImportResult {
   const raw = input.replace(/^\uFEFF/, '').trim();
   if (!raw) throw new Error('请先选择课表文件，或粘贴 HTML / JSON 备份内容。');
@@ -92,7 +105,7 @@ export function parseInput(input: string): ImportResult {
     courses: [], term: 'term' in payload && typeof payload.term === 'string' ? payload.term.slice(0, 100) : '',
     warnings: [], sourceCount: payload.records.length,
   };
-  const seen = new Set<string>();
+  const seen = new Map<string, Course>();
   payload.records.forEach((record: unknown, index: number) => {
     try {
       if (!record || typeof record !== 'object' || Array.isArray(record)) throw new Error('课程记录格式不正确');
@@ -108,9 +121,21 @@ export function parseInput(input: string): ImportResult {
         weekText: match[2], teacher: textField(item, 'teacher'), location: textField(item, 'location'),
         className: textField(item, 'className'), notes: textField(item, 'notes'), pending: item.pending === true,
       };
+      try {
+        const credits = parseCredits(item.credits);
+        if (credits !== undefined) course.credits = credits;
+      } catch {
+        result.warnings.push(`第 ${index + 1} 条「${name}」的学分无法识别，已保留课程并留空学分，请在课程编辑中核对。`);
+      }
       course.id = stableId(JSON.stringify([course.name, course.className, course.day, course.periods, course.weeks, course.teacher, course.location, course.pending]));
-      if (seen.has(course.id)) { result.warnings.push(`第 ${index + 1} 条「${name}」与已有排课完全重复，已去重。`); return; }
-      seen.add(course.id);
+      const existing = seen.get(course.id);
+      if (existing) {
+        if (existing.credits === undefined && course.credits !== undefined) existing.credits = course.credits;
+        else if (course.credits !== undefined && existing.credits !== course.credits) result.warnings.push(`第 ${index + 1} 条「${name}」与已有排课的学分不一致，已保留先读取的 ${existing.credits} 学分，请核对。`);
+        result.warnings.push(`第 ${index + 1} 条「${name}」与已有记录对应同一排课，已去重。`);
+        return;
+      }
+      seen.set(course.id, course);
       result.courses.push(course);
     } catch (error) {
       result.warnings.push(`第 ${index + 1} 条未导入：${error instanceof Error ? error.message : '格式错误'}。`);

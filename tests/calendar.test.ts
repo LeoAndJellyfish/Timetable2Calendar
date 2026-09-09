@@ -152,4 +152,19 @@ describe('RFC 5545 export, independently read by ical.js', () => {
       expect(calendarEventText(event, 'concise').location).toBe(location);
     }
   });
+
+  it.each([0.25, 2, 0, undefined])('includes known credits only in detailed ICS descriptions and preserves UIDs: %s', credits => {
+    const course = { ...base, credits, weeks: [1] };
+    const settings = { ...ready(), eventDetails: 'detailed' as const };
+    const occurrence = expandCourses([course], settings)[0];
+    const detailed = new ICAL.Event(new ICAL.Component(ICAL.parse(generateIcs([course], settings).text)).getFirstSubcomponent('vevent')!);
+    expect(detailed.description).toBe(calendarEventText(occurrence, 'detailed').description);
+    if (credits === undefined) expect(detailed.description).not.toContain('学分：');
+    else expect(detailed.description.split('\n')).toContain(`学分：${credits}`);
+    const concise = new ICAL.Event(new ICAL.Component(ICAL.parse(generateIcs([course], ready()).text)).getFirstSubcomponent('vevent')!);
+    expect(concise.description).toBe(course.teacher);
+    expect(detailed.uid).toBe(concise.uid);
+    const withoutCredits = generateIcs([{ ...course, credits: undefined }], settings);
+    expect(withoutCredits.text.match(/UID:.+/g)).toEqual(generateIcs([course], settings).text.match(/UID:.+/g));
+  });
 });

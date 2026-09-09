@@ -8,6 +8,7 @@ export interface Course {
   teacher: string;
   location: string;
   className: string;
+  credits?: number;
   notes: string;
   pending: boolean;
 }

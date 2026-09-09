@@ -127,6 +127,7 @@ export function calendarEventText(event: Occurrence, mode: Settings['eventDetail
     course.teacher && `教师：${course.teacher}`,
     `第 ${event.week} 周 · ${WEEKDAYS[course.day - 1]} · 第 ${periodText} 节`,
     course.className && `教学班：${course.className}`,
+    course.credits !== undefined && `学分：${course.credits}`,
   ] : [course.teacher];
   return {
     title: course.name,

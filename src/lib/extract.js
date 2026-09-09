@@ -28,6 +28,7 @@ export function collectSchedule(doc) {
         location: fields['上课地点'] || '',
         teacher: fields['教师'] || '',
         className: fields['教学班名称'] || '',
+        credits: fields['学分'] || '',
         notes: fields['选课备注'] || '',
         pending,
       });
