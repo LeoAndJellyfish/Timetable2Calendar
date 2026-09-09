@@ -14,10 +14,6 @@ import type { Course, ImportResult, Settings } from './lib/types';
 type Section = 'timetable' | 'settings' | 'exceptions';
 const SECTION_NAMES = { timetable: '我的课表', settings: '学期与时间', exceptions: '停课与调课' };
 const emptyResult = (): ImportResult => ({ courses: [], term: '', warnings: [], sourceCount: 0 });
-const PAGE_COPY = {
-  settings: { eyebrow: 'SEMESTER & TIME', title: '学期与时间', description: '从第一周开始，让每一节课都准时出现在日历里。' },
-  exceptions: { eyebrow: 'SCHEDULE ADJUSTMENTS', title: '停课与调课', description: '为假期和临时变动，留一点调整的空间。' },
-};
 
 export default function App() {
   const [result, setResult] = useState<ImportResult>(emptyResult);
@@ -84,10 +80,9 @@ export default function App() {
         <h1 id="home-title">把课表转换为日历</h1>
         <p>导入教务课表，核对上课时间，导出 .ics 文件。可添加到 Apple 日历、Google 日历或 Outlook。</p>
       </section>)}
-      {(section !== 'timetable' || hasCourses) && <section className={`hero ${section === 'timetable' ? 'hero-actions' : ''}`}>
-        {section !== 'timetable' && <div className="hero-copy"><div className="eyebrow">{PAGE_COPY[section].eyebrow}</div><h1>{PAGE_COPY[section].title}</h1><p>{PAGE_COPY[section].description}</p></div>}
-        {hasCourses && <button className="button primary export-main" onClick={requestExport}><ArrowDownToLine size={17} />导出日历<span>.ics</span></button>}
-      </section>}
+      {hasCourses && <div className="page-actions">
+        <button className="button primary export-main" onClick={requestExport}><ArrowDownToLine size={17} />导出日历<span>.ics</span></button>
+      </div>}
       {section === 'timetable' && hasCourses && <>
       <section className="stats-strip" aria-label="课表统计">
         <div><section><span>已选课程</span><strong>{distinct}<small>门</small></strong></section></div>

@@ -100,12 +100,8 @@ textarea { resize: vertical; line-height: 1.7; }
 /* Page rhythm and summary */
 .main-content { width: min(1360px, calc(100% - 96px)); margin: 0 auto; padding: 0 0 32px; }
 .main-content:focus { outline: none; }
-.hero { position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; padding: 46px 0 28px; }
-.hero.hero-actions { justify-content: flex-end; padding: 24px 0 22px; }
-.eyebrow, .panel-eyebrow { color: var(--muted); font: 600 12px/1.5 var(--sans); letter-spacing: .16em; text-shadow: 0 1px 0 #fff; }
-.eyebrow { margin-bottom: 16px; }
-.hero h1 { font-size: clamp(34px, 3.3vw, 44px); line-height: 1.3; }
-.hero p { margin-top: 15px; font-size: 16px; color: var(--muted); }
+.page-actions { display: flex; justify-content: flex-end; padding: 24px 0 22px; }
+.panel-eyebrow { color: var(--muted); font: 600 12px/1.5 var(--sans); letter-spacing: .16em; text-shadow: 0 1px 0 #fff; }
 .export-main { flex-shrink: 0; margin-bottom: 3px; min-height: 43px; padding-inline: 20px; }
 .export-main>span { opacity: .62; font-size: 14px; margin-left: 5px; }
 .stats-strip { display: grid; grid-template-columns: repeat(3, 1fr) 1.35fr; padding: 22px 24px; margin-bottom: 30px; border: 1px solid rgb(255 255 255 / 60%); border-radius: 20px; background: var(--raised); box-shadow: var(--shadow); }
@@ -211,12 +207,10 @@ textarea { resize: vertical; line-height: 1.7; }
 
 /* Semester and date adjustment forms */
 .page-settings, .page-exceptions { max-width: 1060px; }
-.page-settings .hero, .page-exceptions .hero { padding-bottom: 36px; }
 .settings-panel { padding: 32px 36px; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 25px; }
-.section-heading h2 { margin-top: 10px; font-size: 28px; }
+.section-heading h1 { font-size: 28px; }
 .section-heading>svg { color: var(--muted-soft); }
-.settings-intro { display: flex; align-items: center; gap: 11px; padding: 16px 18px; background: var(--canvas-soft); box-shadow: var(--inset-shadow); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 28px; color: var(--muted); font-size: 16px; }
 .form-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; margin-bottom: 23px; }
 .field-label, .edit-form label { display: flex; flex-direction: column; gap: 9px; color: var(--primary); font-size: 16px; font-weight: 600; min-width: 0; }
 .field-label input, .field-label textarea, .field-label select, .edit-form input, .edit-form select, .edit-form textarea { width: 100%; font-weight: 500; min-height: 44px; }
@@ -224,7 +218,7 @@ textarea { resize: vertical; line-height: 1.7; }
 .static-input { border: 1px solid var(--line); padding: 12px 14px; background: var(--canvas-soft); box-shadow: var(--inset-shadow); border-radius: 12px; min-height: 44px; font-size: 16px; font-weight: 500; }
 .calendar-format-field { margin-bottom: 30px; }
 .subheading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 30px 0 12px; padding-top: 25px; border-top: 1px solid var(--line); }
-.subheading h3 { font-size: 17px; }
+.subheading h2 { font-size: 17px; }
 .periods-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
 .period-row { display: flex; align-items: center; justify-content: space-between; gap: 7px; padding: 13px 11px; background: var(--raised); border: 1px solid rgb(255 255 255 / 60%); border-radius: 13px; box-shadow: 3px 3px 8px rgb(112 121 114 / 14%), -3px -3px 8px rgb(255 255 252 / 75%); }
 .period-row>span:first-child { font: 600 17px var(--sans); font-variant-numeric: tabular-nums; color: var(--muted); width: 26px; flex-shrink: 0; text-shadow: 0 1px 0 #fff; }
@@ -300,7 +294,6 @@ textarea { resize: vertical; line-height: 1.7; }
 .session-note { text-align: right; margin-top: 15px; color: var(--muted); font-size: 14px; }
 
 @media (min-width: 1600px) {
-  .hero { padding-top: 64px; padding-bottom: 32px; }
   .workspace-grid { grid-template-columns: 310px minmax(0, 1fr); }
   .import-panel { padding: 28px; }
   .course-block strong { font-size: 15px; }
@@ -310,7 +303,6 @@ textarea { resize: vertical; line-height: 1.7; }
   .main-content { width: calc(100% - 56px); }
   .workspace-grid { grid-template-columns: 245px minmax(0, 1fr); gap: 18px; }
   .import-panel { padding: 23px 19px; }
-  .hero h1 { font-size: 36px; }
   .timetable-heading { gap: 10px; padding-inline: 20px; }
   .view-switch button { padding-inline: 9px; }
   .view-switch button span { display: none; }
@@ -321,9 +313,6 @@ textarea { resize: vertical; line-height: 1.7; }
 @media (max-width: 850px) {
   .product-nav { gap: 14px; padding-inline: 18px; width: calc(100% - 40px); }
   .main-content { width: calc(100% - 40px); }
-  .hero { gap: 20px; padding-top: 36px; }
-  .hero h1 { font-size: 32px; }
-  .hero p { font-size: 16px; }
   .stats-strip>div { padding-inline: 20px; }
   .status-check { display: none; }
   .workspace-grid { grid-template-columns: 1fr; }
@@ -349,10 +338,6 @@ textarea { resize: vertical; line-height: 1.7; }
   .product-nav-actions { grid-column: 2; grid-row: 1; }
   .guide-button { min-height: 36px; padding: 8px 11px; font-size: 14px; }
   .main-content { width: calc(100% - 32px); padding-bottom: 24px; }
-  .hero { flex-wrap: wrap; gap: 21px; padding-top: 31px; padding-bottom: 22px; }
-  .eyebrow { font-size: 12px; margin-bottom: 14px; }
-  .hero h1 { font-size: clamp(30px, 7.7vw, 36px); line-height: 1.35; }
-  .hero p { margin-top: 12px; font-size: 14px; }
   .export-main { min-height: 38px; font-size: 16px; padding: 9px 16px; margin-left: auto; }
   .stats-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 18px 14px 0; margin-bottom: 18px; }
   .stats-strip>div { justify-content: flex-start; padding: 0 12px; min-width: 0; }
@@ -390,14 +375,12 @@ textarea { resize: vertical; line-height: 1.7; }
   .course-list-main strong { font-size: 16px; }
   .course-list-main span, .course-list-main small { font-size: 14px; }
   .list-note { align-items: flex-start; font-size: 14px; }
-  .page-settings .hero, .page-exceptions .hero { padding-bottom: 26px; }
   .settings-panel { padding: 24px 20px; }
-  .section-heading h2 { font-size: 26px; }
+  .section-heading h1 { font-size: 26px; }
   .form-grid, .edit-form .form-grid { grid-template-columns: 1fr; gap: 20px; margin-bottom: 20px; }
-  .settings-intro { align-items: flex-start; font-size: 14px; padding: 12px; }
   .field-label small { font-size: 14px; }
   .subheading { gap: 10px; }
-  .subheading h3 { font-size: 16px; }
+  .subheading h2 { font-size: 16px; }
   .subheading .text-button { font-size: 14px; }
   .subheading .button { font-size: 14px; }
   .periods-grid { grid-template-columns: 1fr; }
@@ -454,7 +437,7 @@ textarea { resize: vertical; line-height: 1.7; }
   .empty-privacy { font-size: 14px; margin-top: 19px; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .home-intro, .hero-copy, .workspace-grid, .settings-panel { animation: arrive 360ms var(--ease) both; }
+  .home-intro, .workspace-grid, .settings-panel { animation: arrive 360ms var(--ease) both; }
   .workspace-grid { animation-delay: 50ms; }
   .dialog[open] { animation: dialog-in 180ms var(--ease) both; }
   .toast { animation: toast-in 180ms var(--ease) both; }
